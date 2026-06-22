@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#080e1a"/>
+<title>myOwnApps</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #080e1a;
+    --surface: #0d1829;
+    --surface2: #111f35;
+    --border: #1a2e48;
+    --teal: #00c9a7;
+    --teal-glow: rgba(0,201,167,.15);
+    --amber: #f59e0b;
+    --purple: #a78bfa;
+    --blue: #60a5fa;
+    --text: #e8f4f8;
+    --text-dim: #5a7fa0;
+    --text-mid: #94b8d4;
+    --radius: 20px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND GRID ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,201,167,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,201,167,.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── GLOW ORBS ── */
+  .orb {
+    position: fixed; border-radius: 50%;
+    filter: blur(80px); pointer-events: none; z-index: 0;
+  }
+  .orb1 { width: 400px; height: 400px; background: rgba(0,201,167,.06); top: -100px; left: -100px; }
+  .orb2 { width: 300px; height: 300px; background: rgba(167,139,250,.05); bottom: 100px; right: -80px; }
+
+  /* ── WRAPPER ── */
+  .wrapper {
+    position: relative; z-index: 1;
+    max-width: 520px; margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 60px 0 48px;
+    text-align: center;
+  }
+  .hero-avatar {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, #00c9a7, #0077ff);
+    border-radius: 22px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 32px; margin-bottom: 20px;
+    box-shadow: 0 0 0 1px rgba(0,201,167,.3), 0 8px 32px rgba(0,201,167,.2);
+  }
+  .hero-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px; font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(120deg, #e8f4f8 30%, #00c9a7);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .hero-sub {
+    font-size: 14px; color: var(--text-dim);
+    font-weight: 400; letter-spacing: .3px;
+  }
+  .hero-pill {
+    display: inline-block; margin-top: 16px;
+    background: rgba(0,201,167,.08); border: 1px solid rgba(0,201,167,.2);
+    color: var(--teal); font-size: 11px; font-weight: 600;
+    padding: 5px 14px; border-radius: 20px; letter-spacing: .5px;
+    text-transform: uppercase;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--text-dim); font-weight: 600;
+    margin-bottom: 14px; padding-left: 2px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* ── APP CARD ── */
+  .app-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 16px;
+    text-decoration: none; color: inherit;
+    transition: border-color .25s, transform .2s, box-shadow .25s;
+    cursor: pointer; position: relative; overflow: hidden;
+  }
+  .app-card::before {
+    content: ''; position: absolute;
+    inset: 0; opacity: 0; transition: opacity .25s;
+  }
+  .app-card.live::before { background: var(--teal-glow); }
+  .app-card.wip::before { background: rgba(90,127,160,.06); }
+
+  .app-card.live {
+    border-color: rgba(0,201,167,.25);
+  }
+  .app-card.live:hover {
+    border-color: var(--teal);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,201,167,.12);
+  }
+  .app-card.live:hover::before { opacity: 1; }
+
+  .app-card.wip {
+    opacity: .65;
+    cursor: default;
+  }
+
+  /* ── APP ICON ── */
+  .app-icon {
+    width: 54px; height: 54px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+    position: relative; z-index: 1;
+  }
+  .icon-teal { background: linear-gradient(135deg, #003d30, #005a45); border: 1px solid rgba(0,201,167,.3); }
+  .icon-amber { background: linear-gradient(135deg, #2d1f00, #3d2a00); border: 1px solid rgba(245,158,11,.2); }
+  .icon-purple { background: linear-gradient(135deg, #1a0d2e, #250f40); border: 1px solid rgba(167,139,250,.2); }
+
+  /* ── APP INFO ── */
+  .app-info { flex: 1; position: relative; z-index: 1; }
+  .app-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px; font-weight: 700; margin-bottom: 4px;
+    letter-spacing: -0.2px;
+  }
+  .app-desc { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+
+  /* ── STATUS BADGES ── */
+  .status-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: .5px;
+    text-transform: uppercase; padding: 3px 9px; border-radius: 10px;
+    display: inline-block; margin-top: 8px;
+  }
+  .badge-live { background: rgba(0,201,167,.12); color: var(--teal); border: 1px solid rgba(0,201,167,.25); }
+  .badge-wip  { background: rgba(90,127,160,.1); color: var(--text-dim); border: 1px solid var(--border); }
+
+  /* ── ARROW ── */
+  .app-arrow {
+    font-size: 18px; color: var(--text-dim);
+    position: relative; z-index: 1; flex-shrink: 0;
+    transition: transform .2s, color .2s;
+  }
+  .app-card.live:hover .app-arrow { transform: translateX(3px); color: var(--teal); }
+
+  /* ── WIP TOOLTIP ── */
+  .wip-label {
+    font-size: 10px; color: var(--text-dim);
+    font-style: italic; margin-top: 4px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center; padding-top: 32px;
+    font-size: 12px; color: var(--text-dim);
+    line-height: 1.8;
+  }
+  .footer span { color: var(--teal); }
+
+  /* ── RIPPLE on tap ── */
+  .app-card.live:active { transform: scale(.98); }
+</style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-avatar">🛠️</div>
+    <div class="hero-name">myOwnApps</div>
+    <div class="hero-sub">Personal tools, built for everyday life</div>
+    <div class="hero-pill">✦ My Collection</div>
+  </div>
+
+  <!-- LIVE -->
+  <div class="section-label">Live</div>
+
+  <a class="app-card live" href="https://rishisarda21.github.io/myOwnApps/glucose-tracker.html" target="_blank">
+    <div class="app-icon icon-teal">💉</div>
+    <div class="app-info">
+      <div class="app-name">GlucoTrack</div>
+      <div class="app-desc">Blood sugar monitor with history, HbA1c estimator, charts & reminders</div>
+      <span class="status-badge badge-live">● Live</span>
+    </div>
+    <div class="app-arrow">→</div>
+  </a>
+
+  <!-- COMING SOON -->
+  <div class="section-label" style="margin-top:28px">Coming Soon</div>
+
+  <div class="app-card wip">
+    <div class="app-icon icon-amber">💸</div>
+    <div class="app-info">
+      <div class="app-name">SplitwiseMyway</div>
+      <div class="app-desc">Split bills and expenses with friends your way</div>
+      <span class="status-badge badge-wip">⏳ Work in Progress</span>
+    </div>
+    <div class="app-arrow">→</div>
+  </div>
+
+  <div class="app-card wip">
+    <div class="app-icon icon-purple">📊</div>
+    <div class="app-info">
+      <div class="app-name">MyMonthlyExpenseTracker</div>
+      <div class="app-desc">Track monthly spending, budgets and savings goals</div>
+      <span class="status-badge badge-wip">⏳ Work in Progress</span>
+    </div>
+    <div class="app-arrow">→</div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    Built with <span>♥</span> by Rishi &nbsp;·&nbsp; Personal use only<br/>
+    <span>rishisarda21.github.io/myOwnApps</span>
+  </div>
+
+</div>
+
+</body>
+</html>
